@@ -1,1 +1,14 @@
 sample_id,split,tags,reason
+BDD02,example,normal,Đèn giao thông rõ ràng tại giao lộ ban ngày dùng làm mẫu trực quan trong guideline
+BDD04,example,negative,Biển báo màu vàng 15 MPH dễ gây nhầm lẫn làm ví dụ âm tính hướng dẫn annotator không vẽ nhầm
+BDD13,example,normal,Đèn treo giữa đường ban ngày làm ví dụ gán nhãn tight visible box và relevant
+BDD17,calibration,negative;low_visibility,Trời mưa đường ướt kiểm tra phân biệt bóng phản chiếu đèn xe với đèn giao thông
+BDD18,calibration,edge;low_visibility,Ban đêm kiểm tra vẽ box bám sát vỏ đèn thay vì quầng sáng lóa
+BDD22,calibration,negative;low_visibility,Chạng vạng cao tốc kiểm tra loại trừ không có đèn ngã tư
+BDD25,calibration,edge;ambiguity,Chạng vạng trong phố kiểm tra xác định tính liên quan relevant ở góc nghiêng
+BDD26,calibration,edge;critical;low_visibility,Ban đêm nhiều nguồn sáng kiểm tra phân loại state và lọc đèn xe
+BDD01,blind,edge;small_far,Đèn nhỏ ở xa trên cao tốc thử thách ngưỡng nhận diện kích thước 12px
+BDD07,blind,normal;critical,Giao lộ có hai đầu đèn thẳng và lệch góc thử thách phân biệt relevant và not_relevant
+BDD10,blind,edge;critical,Tuyến phố có đèn tín hiệu và xe phanh thử thách gán nhãn state chính xác
+BDD12,blind,edge;ambiguity,Giao lộ phức tạp khuất tầm nhìn thử thách gán unknown khi không đủ bằng chứng
+BDD21,blind,edge;occlusion,Nhiều đầu đèn trên giá long môn thử thách phân tách instance và độ che khuất
