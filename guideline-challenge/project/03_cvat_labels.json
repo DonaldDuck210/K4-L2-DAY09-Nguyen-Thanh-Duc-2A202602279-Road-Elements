@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "name": "traffic_light",
+    "color": "#F9A825",
+    "type": "rectangle",
+    "attributes": [
+      {
+        "name": "state",
+        "mutable": true,
+        "input_type": "select",
+        "default_value": "__undefined__",
+        "values": ["red", "yellow", "green", "off", "unknown"]
+      },
+      {
+        "name": "needs_review",
+        "mutable": false,
+        "input_type": "checkbox",
+        "default_value": "false",
+        "values": ["false"]
+      }
+    ]
+  }
+]
