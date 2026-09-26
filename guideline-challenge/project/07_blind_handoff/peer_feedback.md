@@ -4,7 +4,7 @@ Phần 1 do **nhóm peer** trả lời (gửi kèm file export). Phần 2 do **n
 là xong (gate G5).
 
 - **Nhóm peer:** Nhóm 03
-- **Người label blind:** Nguyễn Văn A (Nhóm 03)
+- **Người label blind:** Nhóm 03
 
 ## 1. Peer trả lời
 
