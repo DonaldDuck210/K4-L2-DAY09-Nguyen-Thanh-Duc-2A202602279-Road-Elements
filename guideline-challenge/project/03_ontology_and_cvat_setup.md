@@ -35,4 +35,3 @@ cách kiểm mọi đèn có `relevance=unknown` phải có `needs_review=true`.
 Một thành viên **chưa tham gia setup** mở task và trả lời: label gì, dùng tool nào, gán attribute nào, khi nào
 escalate. Ghi lại ai test và chỗ họ vấp:
 
-TODO
