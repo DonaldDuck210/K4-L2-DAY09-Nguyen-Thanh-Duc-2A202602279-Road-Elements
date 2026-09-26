@@ -1,1 +1,6 @@
 sample_id,item,values_by_annotator,diagnosis,action,rule_change
+sample_id,item,values_by_annotator,diagnosis,action,rule_change
+BDD17,traffic_light · relevance (2 đầu đèn),thang=relevant|unknown; truong=not_relevant|relevant,guideline_gap,revise_rule,"Mục 4: thêm cách xác định giao lộ gần nhất (vạch dừng hoặc vạch qua đường gần nhất nằm phía trước xe; không thấy vạch thì lấy cụm đầu đèn đầu tiên dọc làn mình) và quy tắc phân xử: phân vân giữa relevant và not_relevant thì chọn unknown + needs_review, không chọn một trong hai"
+BDD25,traffic_light · count,thang=2; truong=3,guideline_gap,add_example,"Mục 5: lúc chạng vạng nếu không thấy rõ mép vỏ đèn thì dùng ngưỡng đĩa sáng ≥ 10 px như ban đêm; đo bằng kích thước box CVAT hiển thị; đèn sát ngưỡng (trong khoảng ±2 px) vẫn vẽ và tick needs_review"
+BDD25,traffic_light · relevance + state,thang=undefined|undefined (state green|undefined); truong=relevant×3 (state green×3),execution_error,coaching,"Mục 10: thêm bước tự kiểm bắt buộc trước khi Save (Attribute annotation, không còn __undefined__)"
+BDD26,traffic_light · relevance,thang=undefined; truong=relevant,execution_error,coaching,
