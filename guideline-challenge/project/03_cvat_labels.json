@@ -10,13 +10,6 @@
         "input_type": "select",
         "default_value": "__undefined__",
         "values": ["__undefined__", "red", "yellow", "green", "off", "unknown"]
-      },
-      {
-        "name": "needs_review",
-        "mutable": false,
-        "input_type": "checkbox",
-        "default_value": "false",
-        "values": ["false"]
       }
     ]
   }
