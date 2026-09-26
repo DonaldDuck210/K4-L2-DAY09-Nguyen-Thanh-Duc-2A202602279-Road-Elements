@@ -1,6 +1,6 @@
 # Annotation guideline — Trạng thái đèn tín hiệu và mức liên quan tới làn xe mình
 
-**Version:** v1
+**Version:** v2
 
 <!--
 v0 = chưa có bản nháp. Đổi dòng Version ở trên thành v1 khi xong bản nháp đầu, v2 sau calibration, v3 sau blind
@@ -63,20 +63,24 @@ là quên gán.
 
 1. Giả định xe mình **đi thẳng** trong làn hiện tại. Chỉ khác đi khi làn của xe mình có **mũi tên rẽ sơn trên mặt
    đường nhìn thấy trong ảnh**; khi đó xe mình đi theo hướng mũi tên đó.
-2. `relevant` = đầu đèn quay về phía xe mình **và** điều khiển hướng đi của xe mình **tại giao lộ gần nhất phía trước**
-   (vạch dừng hoặc vạch qua đường gần nhất). Một giao lộ thường có nhiều đầu đèn cùng điều khiển một hướng (đèn trên
-   cần treo, đèn trên cột phía xa): **tất cả** đều `relevant`.
+2. `relevant` = đầu đèn quay về phía xe mình **và** điều khiển hướng đi của xe mình **tại giao lộ gần nhất phía trước**.
+   - **Định nghĩa "giao lộ gần nhất":** là vạch dừng hoặc vạch qua đường gần nhất nằm phía trước xe; trường hợp không thấy vạch thì lấy cụm đầu đèn đầu tiên dọc theo làn đường xe mình đang di chuyển.
+   - Một giao lộ thường có nhiều đầu đèn cùng điều khiển một hướng (đèn trên cần treo, đèn trên cột phía xa): **tất cả** đều `relevant`.
 3. `not_relevant` = đầu đèn quay về phía xe mình nhưng điều khiển **hướng khác** (ví dụ đầu đèn chỉ có mũi tên rẽ trái
    khi xe mình đi thẳng), hoặc thuộc **giao lộ xa hơn** giao lộ gần nhất.
 4. `unknown` + tick `needs_review` = không xác định được đầu đèn điều khiển hướng nào hoặc thuộc giao lộ nào.
+5. **Quy tắc phân xử khi phân vân:** Phân vân giữa `relevant` và `not_relevant` thì **bắt buộc chọn `unknown` và tick `needs_review`**, không tự ý chọn một trong hai hoặc đoán mò.
 
 ## 5. Inclusion / exclusion
 
 **Bắt buộc vẽ** khi đủ cả ba điều kiện:
 1. Là đèn tín hiệu dành cho xe (ô đèn tròn hoặc mũi tên, xếp đỏ–vàng–xanh).
 2. Thấy được **mặt đèn** (ống kính) quay về phía xe mình.
-3. Đủ lớn: **cạnh dài của vỏ đèn ≥ 20 px**; ban đêm không thấy vỏ thì **đường kính đĩa sáng ≥ 10 px**. Đo ở kích thước
-   gốc của ảnh (CVAT hiện kích thước box khi chọn object).
+3. Đủ lớn:
+   - Thấy rõ mép vỏ đèn: **cạnh dài của vỏ đèn ≥ 20 px**.
+   - Khi không thấy rõ mép vỏ đèn (**ban đêm, lúc chạng vạng**): dùng ngưỡng **đường kính đĩa sáng ≥ 10 px**.
+   - Đo ở kích thước gốc của ảnh (CVAT hiện kích thước box khi chọn object).
+   - **Đèn sát ngưỡng (vỏ 18–22 px, đĩa sáng 8–12 px):** vẫn vẽ (LABEL) và bắt buộc tick `needs_review` (xem mục 7).
 
 **Không vẽ** (IGNORE, không cần đánh dấu gì):
 - **Đèn đi bộ**: hiện hình bàn tay hoặc hình người đi bộ, thường là hộp vuông với hai ô cạnh nhau, gắn thấp trên cột ở
@@ -84,7 +88,7 @@ là quên gán.
 - Đầu đèn nhìn **nghiêng hoặc từ phía sau** (chỉ thấy thân vỏ, không thấy ô đèn nào).
 - **Phản chiếu** của đèn trên kính xe mình, kính xe khác, cửa kính nhà, mặt đường ướt.
 - Nguồn sáng không phải đèn tín hiệu: đèn phanh, đèn pha, đèn đường, biển hiệu và quảng cáo phát sáng.
-- Đèn **nhỏ hơn ngưỡng** ở điều kiện 3.
+- Đèn **nhỏ hơn ngưỡng** ở điều kiện 3 (dưới 18 px với vỏ, dưới 8 px với đĩa sáng).
 
 ## 6. Visibility / occlusion
 
@@ -103,6 +107,8 @@ là quên gán.
 | Thuộc danh sách "Không vẽ" ở mục 5 | IGNORE | Không vẽ gì |
 | Không nhận ra màu hoặc hình của ô đang sáng | UNKNOWN | `state=unknown` và/hoặc `signal_shape=unknown` |
 | Không biết đầu đèn điều khiển hướng nào / giao lộ nào | ESCALATE đèn | `relevance=unknown` + tick `needs_review` |
+| Phân vân giữa `relevant` và `not_relevant` tại giao lộ | ESCALATE đèn | `relevance=unknown` + tick `needs_review` |
+| Đèn sát ngưỡng kích thước (vỏ 18–22 px, đĩa sáng 8–12 px) | LABEL + ESCALATE | Vẽ box theo phần nhìn thấy + tick `needs_review` |
 | Một đầu đèn sáng đồng thời hai ô (ví dụ đỏ tròn + mũi tên xanh) | LABEL + ESCALATE | `state` theo ô tròn, `signal_shape=circle`, tick `needs_review` |
 | Thấy vạch dừng hoặc vạch qua đường của giao lộ gần nhất nhưng **không thấy đầu đèn xe nào** điều khiển làn mình (chỉ thấy đèn đi bộ, hoặc chỉ thấy đèn của giao lộ xa hơn) | ESCALATE ảnh | Gắn tag `image_escalate` |
 | Không có giao lộ, không có đèn | Không làm gì | Không vẽ, không tag |
@@ -122,8 +128,15 @@ Không áp dụng — task ảnh tĩnh. Các frame LISA liên tiếp cũng gán 
 | BDD12 | Trước vạch qua đường; cột bên phải có hộp đèn hiện bàn tay màu cam. Không thấy đầu đèn xe nào | Không vẽ box nào. Gắn tag `image_escalate` | Mục 5 (đèn đi bộ), mục 7 (escalate ảnh) |
 | BDD06 | Cao tốc, chỉ có biển cảnh báo vàng hình thoi, không có giao lộ | Không vẽ, không tag | Mục 5, dòng cuối mục 7 |
 
-## 10. Common mistakes
+## 10. Common mistakes & Quy trình tự kiểm
 
+**Quy trình tự kiểm tra bắt buộc trước khi Save (Ctrl+S):**
+1. Chuyển sang chế độ **Attribute annotation** (góc trên bên phải) để rà soát từng đối tượng.
+2. Đảm bảo **không còn bất kỳ giá trị `__undefined__` nào** trong mọi trường dropdown (`state`, `signal_shape`, `relevance`).
+3. Mọi đèn có `state=unknown` hoặc `relevance=unknown` bắt buộc phải được tick `needs_review`.
+4. Rà soát xem ảnh có tình huống ngã tư thiếu đèn xe để gắn tag `image_escalate` hay không.
+
+**Lỗi thường gặp:**
 1. Vẽ đèn đi bộ bàn tay đỏ thành `traffic_light` `state=red`. Đèn đi bộ luôn **không vẽ**.
 2. Để `relevance=relevant` cho đầu đèn mũi tên rẽ trái khi xe mình đi thẳng.
 3. Gán `relevant` cho đèn của giao lộ phía sau giao lộ gần nhất.
@@ -131,3 +144,4 @@ Không áp dụng — task ảnh tĩnh. Các frame LISA liên tiếp cũng gán 
 5. Quên đổi `__undefined__` ở một attribute. Dùng chế độ **Attribute annotation** để rà từng đèn.
 6. Vẽ phản chiếu đèn trên kính xe mình, hoặc vẽ đèn phanh xe phía trước thành đèn đỏ.
 7. Đoán màu khi đèn bị loá thay vì chọn `unknown`.
+8. Bỏ quên giá trị mặc định `__undefined__` ở `relevance` hoặc `state` (lỗi thực thi). Cần tự kiểm checklist trước khi bấm Save.

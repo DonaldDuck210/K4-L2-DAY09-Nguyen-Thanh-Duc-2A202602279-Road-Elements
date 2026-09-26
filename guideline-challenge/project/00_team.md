@@ -2,9 +2,9 @@
 
 Điền trước phút 15. Thay mọi placeholder; còn sót thì `make status` báo ở gate G1.
 
-- **Team:** Lab9 (ví dụ `team07`)
-- **Nhóm peer test bài của mình:** TODO (cặp A ↔ B; số nhóm lẻ thì ring 3 nhóm A → B → C → A — Lab Coach công bố)
-- **Nhóm mình test bài của:** TODO
+- **Team:** RapXiecTrungUong
+- **Nhóm peer test bài của mình:** Nhóm 03
+- **Nhóm mình test bài của:** Nhóm 03
 - **Problem family:** `label traffic lights` (xem README mục "1 · Chọn bài toán")
 - **Nguồn ảnh:** `bdd100k` và `lisa` (`bdd100k`, `gtsdb`, `lisa` — chỉ dùng ảnh trong `data/`)
 
