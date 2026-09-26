@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "name": "traffic_light",
+    "color": "#F9A825",
+    "type": "rectangle",
+    "attributes": [
+      {
+        "name": "state",
+        "mutable": true,
+        "input_type": "select",
+        "default_value": "__undefined__",
+        "values": ["__undefined__", "red", "yellow", "green", "off", "unknown"]
+      }
+    ]
+  }
+]
