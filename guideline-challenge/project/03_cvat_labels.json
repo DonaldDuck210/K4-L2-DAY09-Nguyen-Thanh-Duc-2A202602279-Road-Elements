@@ -9,7 +9,7 @@
         "mutable": true,
         "input_type": "select",
         "default_value": "__undefined__",
-        "values": ["red", "yellow", "green", "off", "unknown"]
+        "values": ["__undefined__", "red", "yellow", "green", "off", "unknown"]
       },
       {
         "name": "needs_review",
