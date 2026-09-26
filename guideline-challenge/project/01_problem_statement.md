@@ -1,42 +1,45 @@
 # Problem statement + downstream contract
 
-Tối đa nửa trang, viết **trước khi mở CVAT**. Đây là bằng chứng của gate G1 (topic lock). Thay mọi placeholder
-mới là xong.
-
 ## Bài toán
 
-Gán trạng thái (đỏ / vàng / xanh / tắt) và **mức liên quan tới làn của xe mình (ego relevance)** cho từng đầu đèn
-tín hiệu giao thông dành cho xe, tại giao lộ có nhiều đầu đèn, trong điều kiện ngày, chạng vạng và đêm. Khó ở chỗ: nhiều
-đầu đèn cùng lúc (đèn mũi tên rẽ trái cạnh đèn đi thẳng, đèn của giao lộ xa hơn), đèn đi bộ trông giống đèn xe, đèn nhỏ ở
-xa, và ban đêm chỉ thấy quầng sáng, không thấy vỏ đèn.
+Nhận diện trạng thái tín hiệu (`state`) và tính liên quan tới làn xe chủ (`relevance`) của đèn giao thông cho xe cơ giới tại giao lộ nhiều làn và trong điều kiện ánh sáng phức tạp (ban đêm lóa sáng, chạng vạng, đèn xa/nhỏ) trên ảnh camera hành trình đô thị BDD100K.
 
 ## Downstream contract
 
-1. **Downstream task / model / user là ai?** Module lập kế hoạch dừng/đi (stop-go planner) của xe tự hành, và mô hình phát hiện + phân loại trạng thái đèn huấn luyện từ dữ liệu này. Planner chỉ dùng các đèn `relevance=relevant`.
-2. **Output annotation nào thực sự cần?** (geometry, class, attribute nào) Rectangle cho mỗi đầu đèn xe quay mặt về phía xe mình; attribute `state`, `signal_shape`, `relevance`; cờ `occluded`, `needs_review`; tag cả ảnh `image_escalate`.
-3. **Failure nào gây hậu quả lớn nhất?** (đây sẽ là decision `critical` trong gold) 
-(1) Đèn đang điều khiển làn xe mình bị gán sai trạng thái, nhất là đỏ ↔ xanh.
-(2) Gán `relevant` cho đèn không điều khiển làn mình (đèn mũi tên rẽ trái, đèn giao lộ xa) hoặc ngược lại. Cả hai có thể khiến xe vượt đèn đỏ hoặc phanh gấp vô cớ. Đây là các decision `critical`.
-4. **Khi ambiguity không resolve được, ai / ở đâu là escalation path?** Annotator không đoán: đầu đèn không xác định được điều khiển làn nào thì `relevance=unknown` + tick `needs_review`; cả ảnh không xác định được đèn nào điều khiển xe mình thì gắn tag `image_escalate`. Reviewer (QA owner) xử lý hàng đợi escalate theo `05_qa_plan.md`; nếu cần rule mới thì spec owner nâng version guideline.
+1. **Downstream task / model / user là ai?**
+   Module Perception & Trajectory Planning của xe tự hành cấp độ 3+ (AD/ADAS), nhận diện hộp bao và trạng thái đèn để ra quyết định an toàn: dừng (Stop), đi tiếp (Proceed), hoặc nhường đường khi chuyển hướng.
+
+2. **Output annotation nào thực sự cần?**
+   - Geometry: 2D Bounding Box (`rectangle`) ôm sát phần vỏ đèn nhìn thấy.
+   - Class: `traffic_light`.
+   - Attributes:
+     - `state`: `red`, `yellow`, `green`, `off`, `unknown`.
+     - `relevance`: `relevant` (điều khiển trực tiếp hướng đi của xe chủ), `not_relevant` (đèn phụ lệch góc, nhánh rẽ, cắt ngang hoặc quay lưng), `unknown` (không đủ bằng chứng xác định).
+
+3. **Failure nào gây hậu quả lớn nhất?**
+   - Nhận nhầm đầu đèn phụ quay lệch hướng / nhánh rẽ (`not_relevant`) thành đèn điều khiển hướng đi của xe chủ (`relevant`) — ví dụ như đầu đèn lệch góc ở BDD07 $\rightarrow$ Xe nhận sai quyền ưu tiên di chuyển, dẫn đến vượt đèn đỏ hoặc va chạm tại giao lộ (Critical Escape).
+   - Nhận diện nhầm `state = green` khi đèn thực tế là `red` đối với xe chủ (`relevance = relevant`), hoặc bỏ sót đèn đỏ trực tiếp.
+   - Kéo giãn box bao trọn quầng sáng lóa ban đêm $\rightarrow$ Sai lệch ước lượng khoảng cách 3D của vật thể.
+
+4. **Khi ambiguity không resolve được, ai / ở đâu là escalation path?**
+   - Thao tác: Khi không đủ bằng chứng hình ảnh để xác định trạng thái hoặc hướng điều khiển, annotator bắt buộc chọn giá trị `unknown` (trong `state` hoặc `relevance`). Nghiêm cấm việc tự ý suy đoán.
+   - Escalation: Các object mang nhãn `unknown` trong file export CVAT sẽ được hệ thống lọc tự động và chuyển lên Chuyên gia An toàn Xe tự hành (Safety Reviewer) đối chiếu cùng bản đồ số HD Map và video trước/sau.
 
 ## Scope
 
-- **Trong scope (bắt buộc label):** đầu đèn tín hiệu dành cho xe, mặt đèn quay về phía xe mình, đủ lớn (vỏ đèn có cạnh
-  dài ≥ 20 px; ban đêm không thấy vỏ thì đĩa đèn sáng ≥ 10 px).
-- **Ngoài scope (không vẽ):** đèn đi bộ (bàn tay / hình người), đầu đèn nhìn nghiêng hoặc từ phía sau, phản chiếu trên
-  kính / xe / nhà, đèn phanh, đèn đường, biển quảng cáo phát sáng, đèn nhỏ hơn ngưỡng.
-- **Geometry tolerance:** box ôm sát vỏ đèn nhìn thấy (ban đêm: ôm đĩa đèn sáng, không tính quầng); mỗi cạnh lệch
-  ≤ 3 px so với gold là đạt.
+- **Trong scope (bắt buộc label):** Mọi đầu đèn giao thông dành cho xe cơ giới nhìn thấy mặt đèn hoặc tín hiệu đèn phát sáng hướng về xe; có chiều cao $\ge 12\text{ px}$; thấy tối thiểu 1 khoang bóng hoặc khung vỏ.
+- **Ngoài scope (ignore):** Đèn cho người đi bộ (hình người); đèn xe đạp; đèn quay lưng hoàn toàn (không thấy tín hiệu); đèn nhỏ ở xa ($< 12\text{ px}$); quầng sáng rời; vệt đèn phản chiếu trên mặt đường ướt/kính; đèn đuôi xe ô tô.
+- **Geometry tolerance:** Tight visible box ôm sát phần vỏ đèn nhìn thấy được (không ôm quầng sáng ban đêm). Sai số cạnh $\le 2\text{ px}$ với đèn $< 30\text{ px}$ và $\le 3\text{ px}$ với đèn $\ge 30\text{ px}$. IoU so với gold $\ge 0.75$.
 
 ## Output chấm được
 
-LABEL = có box `traffic_light`; IGNORE = không có box (theo danh sách ngoài scope); UNKNOWN = giá trị `unknown` của
-attribute; ESCALATE một đèn = `needs_review=true`; ESCALATE cả ảnh = tag `image_escalate`. Blind test chấm: số đầu đèn
-được vẽ, `state`, `relevance`, việc không vẽ đèn đi bộ, tag escalate, và geometry của box. Tất cả đều có trong export
-CVAT for images 1.1.
+Mọi quyết định đều kiểm tra được qua export CVAT 1.1:
+- `LABEL`: Tạo box `traffic_light` kèm thuộc tính `state` và `relevance`.
+- `IGNORE`: Không vẽ box trên đối tượng ngoài scope (bóng phản chiếu, đèn người đi bộ).
+- `UNKNOWN / ESCALATE`: Gán giá trị `unknown` trong trường `state` hoặc `relevance` khi thông tin bị che khuất hoặc nhập nhằng không thể suy luận.
+- `GEOMETRY`: Đánh giá sai số bounding box theo tight visible boundary.
 
 ## Dữ liệu và giới hạn
 
-BDD100K (ảnh có đèn, gồm đêm và chạng vạng) và LISA (một clip 30 frame ban ngày/chiều tối). Dùng khoảng 15 ảnh:
-4 example, 6 calibration, 5 blind. Blind chỉ lấy BDD để là cảnh chưa thấy. Giới hạn: LISA chỉ là một giao lộ nên ví dụ
-LISA không đại diện; số ảnh đêm ít (2 ảnh); ảnh tĩnh nên không dùng được ngữ cảnh chuyển trạng thái theo thời gian.
+- Nguồn: Trích xuất từ `data/bdd100k` (ảnh 1280x720 ban ngày, đêm, chạng vạng, mưa) 
+- Giới hạn: Ảnh monocular 2D tĩnh không có cảm biến 3D LiDAR/HD Map đi kèm; việc gán `relevance` phải dựa trên cấu trúc vạch kẻ đường, vị trí đầu đèn trên làn và góc quay xe.
