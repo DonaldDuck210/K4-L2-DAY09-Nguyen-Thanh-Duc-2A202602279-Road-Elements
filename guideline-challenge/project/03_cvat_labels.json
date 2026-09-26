@@ -10,6 +10,13 @@
         "input_type": "select",
         "default_value": "__undefined__",
         "values": ["__undefined__", "red", "yellow", "green", "off", "unknown"]
+      },
+      {
+        "name": "relevance",
+        "mutable": false,
+        "input_type": "select",
+        "default_value": "__undefined__",
+        "values": ["__undefined__", "relevant", "not_relevant", "unknown"]
       }
     ]
   }
