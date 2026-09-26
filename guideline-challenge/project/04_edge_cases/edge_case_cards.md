@@ -146,14 +146,3 @@ Diversity: negative
 
 ---
 
-CASE ID: TODO
-Sample: TODO (sample_id)
-Scene: TODO
-Observation: TODO — thấy gì trong ảnh
-Decision: TODO — LABEL / IGNORE / UNKNOWN / ESCALATE
-Expected: TODO — class, attribute, geometry cụ thể
-Rationale: TODO — gắn với downstream contract ở `01_problem_statement.md`
-Common mistake: TODO
-Diversity: TODO — occlusion / small_far / ambiguity / conflict / critical / escalation / …
-
----

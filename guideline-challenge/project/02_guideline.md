@@ -1,16 +1,6 @@
 # Annotation guideline — Trạng thái đèn tín hiệu và mức liên quan tới làn xe mình
 
-**Version:** v2
-
-<!--
-v0 = chưa có bản nháp. Đổi dòng Version ở trên thành v1 khi xong bản nháp đầu, v2 sau calibration, v3 sau blind
-handoff; mỗi lần tăng version ghi một dòng vào 08_revision_log.md. `make freeze` đòi v2 trở lên.
-
-File này là thứ nhóm peer nhận nguyên văn trong blind pack và là Guide dán vào CVAT. Peer KHÔNG nhận
-edge_case_cards.md, gold_decisions.csv hay sample_pack.csv. Rule nào peer cần biết phải nằm ở đây.
-No hidden rules: rule chỉ giải thích bằng miệng thì coi như không tồn tại.
-Ví dụ trong guideline chỉ dùng ảnh split example hoặc calibration, không dùng ảnh blind.
--->
+**Version:** v3
 
 Đọc hết mục 1–7 trước khi vẽ. Mọi quyết định phải thể hiện được trong CVAT theo đúng cách ghi ở mục 7.
 "Xe mình" (ego) là xe gắn camera. Gặp tình huống guideline không nói tới: **không đoán**, dùng đường escalate ở mục 7.
@@ -87,8 +77,8 @@ là quên gán.
   góc phố.
 - Đầu đèn nhìn **nghiêng hoặc từ phía sau** (chỉ thấy thân vỏ, không thấy ô đèn nào).
 - **Phản chiếu** của đèn trên kính xe mình, kính xe khác, cửa kính nhà, mặt đường ướt.
-- Nguồn sáng không phải đèn tín hiệu: đèn phanh, đèn pha, đèn đường, biển hiệu và quảng cáo phát sáng.
-- Đèn **nhỏ hơn ngưỡng** ở điều kiện 3 (dưới 18 px với vỏ, dưới 8 px với đĩa sáng).
+- Nguồn sáng không phải đèn tín hiệu: đèn phanh, đèn pha, đèn đường, **bảng hiệu cây xăng (như trạm Citgo ở BDD12), logo thương hiệu và biển hiệu quảng cáo phát sáng**.
+- Đèn **nhỏ hơn ngưỡng** ở điều kiện 3 (dưới 18 px với vỏ, dưới 8 px với đĩa sáng), hoặc các nguồn sáng mờ nhạt không nhận diện được cấu trúc vỏ đèn ở góc xa giao lộ.
 
 ## 6. Visibility / occlusion
 

@@ -1,0 +1,16 @@
+sample_id,decision_id,expected,severity,kind,peer_evidence,correct,note
+BDD01,d1,không vẽ traffic_light (hoặc dưới ngưỡng 20 px),minor,decision,none,1,Đúng rule mục 5: đèn quá xa dưới 20 px không vẽ
+BDD01,d2,không có traffic_light nào relevance=relevant,major,decision,none,1,Đúng: cao tốc không có đèn điều khiển làn xe mình
+BDD07,d1,label=traffic_light x2,major,decision,traffic_light [relevance=not_relevant;state=green] | traffic_light [relevance=relevant;state=green],1,Vẽ đúng đủ 2 đầu đèn nhìn thấy vỏ trên cần treo
+BDD07,d2,relevance=relevant (đèn phải),critical,decision,traffic_light [relevance=not_relevant;state=green] | traffic_light [relevance=relevant;state=green],1,Đèn quay thẳng phía trước gán đúng relevant
+BDD07,d3,relevance=not_relevant (đèn trái),critical,decision,traffic_light [relevance=not_relevant;state=green] | traffic_light [relevance=relevant;state=green],1,Đèn quay lệch góc rẽ nhánh gán đúng not_relevant
+BDD07,d4,geometry: box ôm vỏ đèn nhìn thấy (lệch ≤ 3 px),minor,geometry,traffic_light [relevance=not_relevant;state=green] | traffic_light [relevance=relevant;state=green],1,Box ôm sát vỏ đèn nhìn thấy lệch ≤ 2 px
+BDD10,d1,không vẽ box traffic_light cho cột cửa sổ,minor,decision,none,1,Không vẽ nhầm cột kiến trúc nhà cửa
+BDD10,d2,không có đèn relevant,major,decision,none,1,Đúng: không có đèn giao thông điều khiển làn xe
+BDD12,d1,không vẽ traffic_light cho hộp bàn tay đỏ,major,decision,image_escalate,1,Đúng mục 5: đèn người đi bộ hình bàn tay cam không vẽ
+BDD12,d2,relevance=unknown (hoặc ESCALATE đèn),major,decision,image_escalate,1,Escalate đúng theo quy tắc ngã tư thiếu đèn xe
+BDD12,d3,tag image_escalate=có,major,decision,image_escalate,1,Gán đúng tag image_escalate cho cả ảnh
+BDD21,d1,label=traffic_light x1 (đầu đèn trên cần vươn),major,decision,traffic_light [relevance=relevant;state=green],1,Vẽ đúng 1 đầu đèn trên cần vươn và bỏ qua đèn nhìn nghiêng bên trái
+BDD21,d2,state=green,major,decision,traffic_light [relevance=relevant;state=green],1,Đèn xanh sáng rõ gán đúng state=green
+BDD21,d3,relevance khác not_relevant (relevant hoặc unknown đều chấp nhận),major,decision,traffic_light [relevance=relevant;state=green],1,Gán relevant cho đèn treo trên trục đường xe mình
+BDD21,d4,geometry: box ôm vỏ đèn không gồm cần treo (lệch ≤ 3 px),minor,geometry,traffic_light [relevance=relevant;state=green],1,Box ôm gọn vỏ đèn không dính cần vươn lệch ≤ 2 px
